@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schweden 2026 — Joel & Luca</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">SE 2026</a>
+  <ul class="nav-links">
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#touren">Kajaktour</a></li>
+    <li><a href="#karte">Karte</a></li>
+    <li><a href="#roadtrip">Roadtrip</a></li>
+    <li><a href="#todos">To-Do</a></li>
+  </ul>
+</nav>
+
+<!-- TIMELINE -->
+<section id="timeline" style="padding-top: 60px;">
+  <div class="section-inner">
+    <div class="section-label">Reiseplan</div>
+    <h2 class="section-title">Die Reise auf einen Blick</h2>
+    <p class="section-desc">Von Schwetzingen durch Dänemark nach Schweden und weiter nach Norwegen.</p>
+    <div class="timeline-track" id="timeline-track"></div>
+  </div>
+</section>
+
+<!-- KAJAKTOUR VERGLEICH -->
+<section id="touren">
+  <div class="section-inner">
+    <div class="section-label">Phase 1</div>
+    <h2 class="section-title">Kajaktour Vergleich</h2>
+    <p class="section-desc">4 Optionen für die Paddeletappe. Alle für Juli 2026 recherchiert.</p>
+    <div class="tours-grid" id="tours-grid"></div>
+  </div>
+</section>
+
+<!-- KARTE -->
+<section id="karte">
+  <div class="section-inner">
+    <div class="section-label">Übersicht</div>
+    <h2 class="section-title">Kajak-Startpunkte</h2>
+    <p class="section-desc">Wo die Touren starten — klick auf einen Marker für Details.</p>
+    <div id="map"></div>
+  </div>
+</section>
+
+<!-- ROADTRIP NORWEGEN -->
+<section id="roadtrip">
+  <div class="roadtrip-inner">
+    <div class="roadtrip-coming">Phase 2 — Coming Soon</div>
+    <h2 class="roadtrip-title">Roadtrip<br>Norwegen</h2>
+    <p class="roadtrip-sub">Kommt nach der Kajaktour — wird noch geplant</p>
+    <div class="roadtrip-pills" id="roadtrip-pills"></div>
+    <div class="roadtrip-placeholder">
+      <span>🗺️</span>
+      <p>Routen, Campingplätze & Highlights folgen</p>
+    </div>
+  </div>
+</section>
+
+<!-- TODOS -->
+<section id="todos">
+  <div class="section-inner">
+    <div class="section-label">Nächste Schritte</div>
+    <h2 class="section-title">To-Do Liste</h2>
+    <p class="section-desc">Was noch erledigt werden muss vor der Abreise.</p>
+    <div class="todos-list" id="todos-list"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Schweden 2026 · Joel & Luca ·
+  <a href="https://github.com/joelhoffmann/URLAUB_PLANUNG" target="_blank">GitHub</a>
+</footer>
+
+<script src="data.js"></script>
+<script>
+// ── TIMELINE ─────────────────────────────────────
+const track = document.getElementById('timeline-track');
+TIMELINE.forEach(item => {
+  const el = document.createElement('div');
+  el.className = 'timeline-item';
+  el.innerHTML = `
+    <div class="timeline-dot">${item.icon}</div>
+    <div>
+      <div class="timeline-date">${item.datum}</div>
+      <div class="timeline-label">${item.label}</div>
+      <div class="timeline-ort">${item.ort}</div>
+    </div>
+  `;
+  track.appendChild(el);
+});
+
+// ── TOUR CARDS ───────────────────────────────────
+const grid = document.getElementById('tours-grid');
+
+TOUREN.forEach(t => {
+  const portagen = t.portagen === null ? '?' : t.portagen === 0 ? 'Keine' : t.portagen;
+  const badge = t.verfuegbar === 'confirmed'
+    ? `<span class="badge-confirmed">${t.verfuegbarText}</span>`
+    : `<span class="badge-inquiry">${t.verfuegbarText}</span>`;
+
+  const tags = t.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+
+  const buchBtn = t.buchungUrl
+    ? `<a class="btn-primary" href="${t.buchungUrl}" target="_blank" rel="noopener">Buchen →</a>`
+    : `<span class="btn-disabled">Online nicht buchbar</span>`;
+
+  const card = document.createElement('div');
+  card.className = 'tour-card';
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="card-title-group">
+        <div class="card-name">${t.name}</div>
+        <div class="card-region">${t.region}</div>
+        <div class="card-anbieter">${t.anbieter}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem">
+        <span class="card-icon">${t.bootIcon}</span>
+        ${badge}
+      </div>
+    </div>
+
+    <div class="card-stats">
+      <div class="stat">
+        <div class="stat-label">Dauer</div>
+        <div class="stat-value">${t.dauer}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Strecke</div>
+        <div class="stat-value">${t.strecke}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Boot</div>
+        <div class="stat-value" style="font-size:0.8rem">${t.boot}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Portagen</div>
+        <div class="stat-value">${portagen}</div>
+      </div>
+    </div>
+
+    <div class="card-preis">
+      <div class="preis-main">${t.preis}</div>
+      <div class="preis-detail">${t.preisDetail}</div>
+    </div>
+
+    <div class="card-desc">${t.beschreibung}</div>
+
+    <div class="card-notiz">💡 ${t.notizen}</div>
+
+    <div class="card-tags">${tags}</div>
+
+    <div class="card-actions">
+      <a class="btn-secondary" href="${t.websiteUrl}" target="_blank" rel="noopener">Website →</a>
+      ${buchBtn}
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+// ── KARTE ─────────────────────────────────────────
+const map = L.map('map', { zoomControl: true, scrollWheelZoom: false });
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 14
+}).addTo(map);
+
+const markerIcon = (color) => L.divIcon({
+  className: '',
+  html: `<div style="
+    width:14px;height:14px;
+    background:${color};
+    border:2px solid rgba(255,255,255,0.8);
+    border-radius:50%;
+    box-shadow:0 0 0 4px ${color}33, 0 2px 8px rgba(0,0,0,0.6);
+  "></div>`,
+  iconSize: [14, 14],
+  iconAnchor: [7, 7],
+  popupAnchor: [0, -10]
+});
+
+const colors = ['#22c55e', '#38bdf8', '#f59e0b', '#a78bfa'];
+const bounds = [];
+
+TOUREN.forEach((t, i) => {
+  const latlng = [t.mapLat, t.mapLng];
+  bounds.push(latlng);
+  const portagen = t.portagen === 0 ? 'Keine' : t.portagen === null ? 'k.A.' : t.portagen;
+  const marker = L.marker(latlng, { icon: markerIcon(colors[i]) }).addTo(map);
+  marker.bindPopup(`
+    <div style="min-width:200px">
+      <div class="popup-name">${t.name}</div>
+      <div class="popup-anbieter">${t.anbieter}</div>
+      <div class="popup-meta">
+        🛶 ${t.boot}<br>
+        📅 ${t.dauer} · ${t.strecke}<br>
+        💶 ${t.preis}<br>
+        🔄 Portagen: ${portagen}
+      </div>
+      <a class="popup-link" href="${t.buchungUrl || t.websiteUrl}" target="_blank" rel="noopener">Buchen →</a>
+    </div>
+  `);
+});
+
+map.fitBounds(bounds, { padding: [40, 40] });
+
+// ── ROADTRIP PILLS ───────────────────────────────
+const pillsEl = document.getElementById('roadtrip-pills');
+ROADTRIP.highlights.forEach(h => {
+  const pill = document.createElement('span');
+  pill.className = 'roadtrip-pill';
+  pill.textContent = h;
+  pillsEl.appendChild(pill);
+});
+
+// ── TODOS ─────────────────────────────────────────
+const todoList = document.getElementById('todos-list');
+
+TODOS.forEach(todo => {
+  const item = document.createElement('div');
+  item.className = `todo-item todo-prio-${todo.prio}`;
+  item.innerHTML = `
+    <div class="todo-body">
+      <div class="todo-text">${todo.text}</div>
+      <div class="todo-hint">${todo.hinweis}</div>
+    </div>
+  `;
+  todoList.appendChild(item);
+});
+</script>
+
+</body>
+</html>
