@@ -15,39 +15,36 @@
   <a class="nav-logo" href="#hero">SE 2026</a>
   <ul class="nav-links">
     <li><a href="#timeline">Timeline</a></li>
-    <li><a href="#touren">Kajaktour</a></li>
     <li><a href="#karte">Karte</a></li>
     <li><a href="#roadtrip">Roadtrip</a></li>
     <li><a href="#todos">To-Do</a></li>
   </ul>
 </nav>
 
+<!-- TOUR MODAL -->
+<div id="tour-modal" class="modal-overlay" hidden>
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
 <!-- TIMELINE -->
 <section id="timeline" style="padding-top: 60px;">
   <div class="section-inner">
     <div class="section-label">Reiseplan</div>
     <h2 class="section-title">Die Reise auf einen Blick</h2>
-    <p class="section-desc">Von Schwetzingen durch Dänemark nach Schweden und weiter nach Norwegen.</p>
+    <p class="section-desc">Von Heidelberg durch Dänemark nach Schweden und weiter nach Norwegen.</p>
     <div class="timeline-track" id="timeline-track"></div>
-  </div>
-</section>
-
-<!-- KAJAKTOUR VERGLEICH -->
-<section id="touren">
-  <div class="section-inner">
-    <div class="section-label">Phase 1</div>
-    <h2 class="section-title">Kajaktour Vergleich</h2>
-    <p class="section-desc">4 Optionen für die Paddeletappe. Alle für Juli 2026 recherchiert.</p>
-    <div class="tours-grid" id="tours-grid"></div>
   </div>
 </section>
 
 <!-- KARTE -->
 <section id="karte">
   <div class="section-inner">
-    <div class="section-label">Übersicht</div>
-    <h2 class="section-title">Kajak-Startpunkte</h2>
-    <p class="section-desc">Wo die Touren starten — klick auf einen Marker für Details.</p>
+    <div class="section-label">Karte</div>
+    <h2 class="section-title">Reisekarte</h2>
+    <p class="section-desc">Startpunkt Klarälven — weitere Spots folgen (Norwegen-Roadtrip etc.)</p>
     <div id="map"></div>
   </div>
 </section>
@@ -84,57 +81,28 @@
 
 <script src="data.js"></script>
 <script>
-// ── TIMELINE ─────────────────────────────────────
-const track = document.getElementById('timeline-track');
-TIMELINE.forEach(item => {
-  const el = document.createElement('div');
-  el.className = 'timeline-item';
-  el.innerHTML = `
-    <div class="timeline-dot">${item.icon}</div>
-    <div>
-      <div class="timeline-date">${item.datum}</div>
-      <div class="timeline-label">${item.label}</div>
-      <div class="timeline-ort">${item.ort}</div>
-    </div>
-  `;
-  track.appendChild(el);
-});
+// ── MODAL ─────────────────────────────────────────
+const modal = document.getElementById('tour-modal');
+const modalContent = document.getElementById('modal-content');
 
-// ── TOUR CARDS ───────────────────────────────────
-const grid = document.getElementById('tours-grid');
-
-TOUREN.forEach(t => {
-  const portagen = t.portagen === null ? '?' : t.portagen === 0 ? 'Keine' : t.portagen;
-  const badge = t.verfuegbar === 'booked'
-    ? `<span class="badge-booked">${t.verfuegbarText}</span>`
-    : t.verfuegbar === 'confirmed'
-    ? `<span class="badge-confirmed">${t.verfuegbarText}</span>`
-    : `<span class="badge-inquiry">${t.verfuegbarText}</span>`;
-
-  const tags = t.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-
-  const buchBtn = t.verfuegbar === 'booked'
-    ? `<span class="btn-booked">Buchung #${t.buchungRef}</span>`
-    : t.buchungUrl
-    ? `<a class="btn-primary" href="${t.buchungUrl}" target="_blank" rel="noopener">Buchen →</a>`
-    : `<span class="btn-disabled">Online nicht buchbar</span>`;
-
-  const card = document.createElement('div');
-  card.className = 'tour-card';
-  card.innerHTML = `
-    <div class="card-header">
-      <div class="card-title-group">
-        <div class="card-name">${t.name}</div>
-        <div class="card-region">${t.region}</div>
-        <div class="card-anbieter">${t.anbieter}</div>
+function openTourModal(tourId) {
+  const t = TOUREN.find(x => x.id === tourId);
+  if (!t) return;
+  const portagen = t.portagen === 0 ? 'Keine' : t.portagen === null ? 'k.A.' : t.portagen;
+  modalContent.innerHTML = `
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">${t.name}</div>
+        <div class="modal-region">${t.region} · ${t.anbieter}</div>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem">
-        <span class="card-icon">${t.bootIcon}</span>
-        ${badge}
-      </div>
+      <span class="badge-booked">${t.verfuegbarText}</span>
     </div>
-
-    <div class="card-stats">
+    <div class="modal-booking">Buchung #${t.buchungRef} · vollständig bezahlt</div>
+    <div class="card-stats" style="margin:1.25rem 0">
+      <div class="stat">
+        <div class="stat-label">Start</div>
+        <div class="stat-value" style="font-size:0.8rem">${t.start}</div>
+      </div>
       <div class="stat">
         <div class="stat-label">Dauer</div>
         <div class="stat-value">${t.dauer}</div>
@@ -144,32 +112,48 @@ TOUREN.forEach(t => {
         <div class="stat-value">${t.strecke}</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Boot</div>
-        <div class="stat-value" style="font-size:0.8rem">${t.boot}</div>
-      </div>
-      <div class="stat">
         <div class="stat-label">Portagen</div>
         <div class="stat-value">${portagen}</div>
       </div>
     </div>
-
     <div class="card-preis">
       <div class="preis-main">${t.preis}</div>
       <div class="preis-detail">${t.preisDetail}</div>
     </div>
-
-    <div class="card-desc">${t.beschreibung}</div>
-
-    <div class="card-notiz">💡 ${t.notizen}</div>
-
-    <div class="card-tags">${tags}</div>
-
-    <div class="card-actions">
+    <div class="card-desc" style="margin-top:1rem">${t.beschreibung}</div>
+    <div class="card-notiz" style="margin-top:0.75rem">💡 ${t.notizen}</div>
+    <div class="card-actions" style="margin-top:1.25rem">
       <a class="btn-secondary" href="${t.websiteUrl}" target="_blank" rel="noopener">Website →</a>
-      ${buchBtn}
     </div>
   `;
-  grid.appendChild(card);
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modal.hidden = true;
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── TIMELINE ─────────────────────────────────────
+const track = document.getElementById('timeline-track');
+TIMELINE.forEach(item => {
+  const el = document.createElement('div');
+  el.className = 'timeline-item' + (item.tourId ? ' timeline-item-clickable' : '');
+  el.innerHTML = `
+    <div class="timeline-dot">${item.icon}</div>
+    <div>
+      <div class="timeline-date">${item.datum}</div>
+      <div class="timeline-label">${item.label}${item.tourId ? ' <span class="timeline-hint">Details →</span>' : ''}</div>
+      <div class="timeline-ort">${item.ort}</div>
+    </div>
+  `;
+  if (item.tourId) el.addEventListener('click', () => openTourModal(item.tourId));
+  track.appendChild(el);
 });
 
 // ── KARTE ─────────────────────────────────────────
@@ -196,11 +180,9 @@ const markerIcon = (color) => L.divIcon({
 });
 
 const colors = ['#22c55e', '#38bdf8', '#f59e0b', '#a78bfa'];
-const bounds = [];
 
 TOUREN.forEach((t, i) => {
   const latlng = [t.mapLat, t.mapLng];
-  bounds.push(latlng);
   const portagen = t.portagen === 0 ? 'Keine' : t.portagen === null ? 'k.A.' : t.portagen;
   const marker = L.marker(latlng, { icon: markerIcon(colors[i]) }).addTo(map);
   marker.bindPopup(`
@@ -210,15 +192,14 @@ TOUREN.forEach((t, i) => {
       <div class="popup-meta">
         🛶 ${t.boot}<br>
         📅 ${t.dauer} · ${t.strecke}<br>
-        💶 ${t.preis}<br>
+        💰 ${t.preis}<br>
         🔄 Portagen: ${portagen}
       </div>
-      <a class="popup-link" href="${t.buchungUrl || t.websiteUrl}" target="_blank" rel="noopener">Buchen →</a>
     </div>
   `);
 });
 
-map.fitBounds(bounds, { padding: [40, 40] });
+map.setView([60.467, 13.267], 6);
 
 // ── ROADTRIP PILLS ───────────────────────────────
 const pillsEl = document.getElementById('roadtrip-pills');

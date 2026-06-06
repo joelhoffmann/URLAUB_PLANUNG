@@ -10,8 +10,8 @@ const TRIP = {
 const TIMELINE = [
   { datum: '18. Juli',          label: 'Abfahrt',              ort: 'Heidelberg',                                    icon: '🚗' },
   { datum: '18. Juli Abend',    label: 'Übernachtung',         ort: 'Hotel, Campingplatz oder Wildcampen (SE: Allemansrätten)', icon: '🏕️' },
-  { datum: '19. Juli, 13:00',   label: 'Kajaktour Start',      ort: 'Gunnerud, Värmland (Vildmark i Värmland)',        icon: '🛶' },
-  { datum: '19.–25. Juli',      label: 'Klarälven — 6 Nächte', ort: 'Värmland, Schweden · Buchung #249943',           icon: '🛶' },
+  { datum: '19. Juli, 13:00',   label: 'Kajaktour Start',      ort: 'Gunnerud, Värmland (Vildmark i Värmland)',        icon: '🛶', tourId: 'klaralven' },
+  { datum: '19.–25. Juli',      label: 'Klarälven — 6 Nächte', ort: 'Värmland, Schweden · Buchung #249943',           icon: '🛶', tourId: 'klaralven' },
   { datum: '25. Juli – 1. Aug', label: 'Roadtrip',             ort: 'Norwegen',                                        icon: '⛰️' },
   { datum: '~1. August',        label: 'Rückfahrt',            ort: 'Heidelberg',                                    icon: '🏠' }
 ];
@@ -42,7 +42,8 @@ const TOUREN = [
     buchungUrl: null,
     mapLat: 60.467, mapLng: 13.267, mapLabel: 'Vildmark i Värmland — Gunnerud (Start/Ende)'
   },
-  {
+  // weitere Spots folgen (Norwegen-Roadtrip etc.)
+  /*{
     id: 'svartalven',
     name: 'Svartälven',
     region: 'Bergslagen, Värmland',
@@ -113,7 +114,7 @@ const TOUREN = [
     websiteUrl: 'https://www.scandtrack.com/Reisen/Kajaktouren/',
     buchungUrl: 'https://www.scandtrack.com/kajaktouren_auf_eigene_faust/5_tage_kajaktour_auf_eigene_faust_am_fluss_tidan/reiseverlauf.html',
     mapLat: 58.700, mapLng: 13.950, mapLabel: 'Scandtrack — Fluss Tidan (Startbereich)'
-  }
+  }*/
 ];
 
 const ROADTRIP = {
