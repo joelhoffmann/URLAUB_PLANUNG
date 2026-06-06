@@ -855,6 +855,10 @@ footer a { color: var(--green); text-decoration: none; }
   padding: 1.5rem;
 }
 
+.modal-overlay[hidden] {
+  display: none;
+}
+
 .modal-box {
   background: var(--surface);
   border: 1px solid var(--border-h);
