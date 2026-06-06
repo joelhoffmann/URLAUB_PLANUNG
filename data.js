@@ -4,16 +4,16 @@ const TRIP = {
   abfahrt: '18. Juli 2026',
   rueckfahrt: '~1. August 2026',
   auto: 'Polestar 4 Dual Motor',
-  startort: 'Schwetzingen'
+  startort: 'Heidelberg'
 };
 
 const TIMELINE = [
-  { datum: '18. Juli',        label: 'Abfahrt',    ort: 'Schwetzingen',           icon: '🚗' },
-  { datum: '19. Juli',        label: 'Anreise',    ort: 'Übernachtung unterwegs', icon: '🏨' },
-  { datum: '20. Juli',        label: 'Ankunft',    ort: 'Schweden',               icon: '🇸🇪' },
-  { datum: '21.–27. Juli',    label: 'Kajaktour',  ort: 'Värmland / Dalsland',    icon: '🛶' },
-  { datum: '27. Juli – 1. Aug', label: 'Roadtrip', ort: 'Norwegen',               icon: '⛰️' },
-  { datum: '~1. August',      label: 'Rückfahrt',  ort: 'Schwetzingen',           icon: '🏠' }
+  { datum: '18. Juli',          label: 'Abfahrt',              ort: 'Heidelberg',                                    icon: '🚗' },
+  { datum: '18. Juli Abend',    label: 'Übernachtung',         ort: 'Hotel, Campingplatz oder Wildcampen (SE: Allemansrätten)', icon: '🏕️' },
+  { datum: '19. Juli, 13:00',   label: 'Kajaktour Start',      ort: 'Gunnerud, Värmland (Vildmark i Värmland)',        icon: '🛶' },
+  { datum: '19.–25. Juli',      label: 'Klarälven — 6 Nächte', ort: 'Värmland, Schweden · Buchung #249943',           icon: '🛶' },
+  { datum: '25. Juli – 1. Aug', label: 'Roadtrip',             ort: 'Norwegen',                                        icon: '⛰️' },
+  { datum: '~1. August',        label: 'Rückfahrt',            ort: 'Heidelberg',                                    icon: '🏠' }
 ];
 
 const TOUREN = [
@@ -28,17 +28,18 @@ const TOUREN = [
     naechte: '6 Nächte',
     strecke: '~100 km',
     portagen: 0,
-    preis: '~540 €',
-    preisDetail: 'Grundpreis + Zelt + 2× Küche ≈ 540 € (5.880 kr) gesamt · Basis allein 395 € (4.280 kr)',
-    start: 'So. 19. Juli 2026',
-    verfuegbar: 'confirmed',
-    verfuegbarText: '✓ Verfügbar',
+    preis: '4.280 SEK',
+    preisDetail: 'Bezahlt: 4.280 SEK (2 Pers. × 2.140 SEK) — Zelt & Küche nicht gebucht, selbst mitbringen',
+    start: 'So. 19. Juli 2026, 13:00 Uhr',
+    verfuegbar: 'booked',
+    verfuegbarText: '✓ GEBUCHT',
+    buchungRef: '249943',
     schwierigkeit: 'Leicht',
     beschreibung: 'Sanfter Fluss durch Nordvärmland. 2–3 km/h Strömung, Sandbänke zum Baden, kein Wildwasser. Shuttle zum Startpunkt inklusive — Auto bleibt am Endpunkt.',
-    notizen: 'Abfahrten Do/So. Zelt & Küche extra mietbar. Schlafsäcke selbst mitbringen.',
-    tags: ['Fluss', 'Anfänger', 'Shuttle inkl.'],
+    notizen: 'Buchung #249943 — vollständig bezahlt. 4.280 SEK (2 Pers.). Zelt & Schlafsäcke selbst mitbringen.',
+    tags: ['Fluss', 'Anfänger', 'Shuttle inkl.', 'Gebucht ✓'],
     websiteUrl: 'https://www.vildmark.se/de/pakete/kanupakete/',
-    buchungUrl: 'https://www.vildmark.se/de/pakete/kanupakete/',
+    buchungUrl: null,
     mapLat: 60.467, mapLng: 13.267, mapLabel: 'Vildmark i Värmland — Gunnerud (Start/Ende)'
   },
   {
@@ -123,9 +124,31 @@ const ROADTRIP = {
 };
 
 const TODOS = [
-  { id: 1, text: 'Kajaktour Option auswählen & buchen', prio: 'high',   hinweis: 'Zeitdruck: nur 6 Wochen bis Abreise!' },
-  { id: 2, text: 'Campingausrüstung checken',           prio: 'medium', hinweis: 'Zelt & Schlafsäcke bereits vorhanden' },
-  { id: 3, text: 'Norwegen-Route grob planen',          prio: 'medium', hinweis: 'Jotunheimen, Fjorde, Bergcamping' },
-  { id: 4, text: 'Übernachtung Anreise buchen',         prio: 'medium', hinweis: 'Hamburg oder Kopenhagen, ~19. Juli' },
-  { id: 5, text: 'Luca informieren & abstimmen',        prio: 'low',    hinweis: 'Tour-Optionen besprechen' }
+  // Anreise & Planung
+  { id: 1,  text: 'Übernachtung 18. Juli klären',             prio: 'high',   hinweis: 'Option A: Hotel/Campingplatz buchen · Option B: Wildcampen in Schweden (Allemansrätten) — funktioniert ab südlichem Schweden, Göteborg-Bereich ideal' },
+  { id: 2,  text: 'Luca über Buchung informieren',           prio: 'high',   hinweis: 'Klarälven, Start 19. Juli, Buchung #249943 — Ausrüstungsliste abstimmen' },
+  { id: 3,  text: 'Norwegen-Route grob planen',              prio: 'medium', hinweis: 'Jotunheimen, Fjorde, Bergcamping · ab ~25. Juli' },
+
+  // Schlafen
+  { id: 4,  text: 'Zelt organisieren (2-Personen)',          prio: 'high',   hinweis: 'Vildmark stellt KEIN Zelt — leicht & wasserdicht, passt ins Kanu' },
+  { id: 5,  text: 'Isomatten / Schlafpads checken',          prio: 'high',   hinweis: 'Selbstaufblasend oder Schaumstoff — keine Luftmatratze für Wildnis' },
+  { id: 6,  text: 'Schlafsäcke checken',                     prio: 'high',   hinweis: 'Bis ~5°C Komfort für Schweden Juli — bereits vorhanden, Zustand prüfen' },
+
+  // Küche
+  { id: 7,  text: 'Campingkocher besorgen',                  prio: 'high',   hinweis: 'Gaskocher (z.B. MSR, Primus) — Vildmark stellt keine Küche' },
+  { id: 8,  text: 'Gaskartuschen einpacken (mind. 3–4)',     prio: 'high',   hinweis: '230g Kartuschen reichen ~1–2 Tage → mind. 4 für 7 Tage' },
+  { id: 9,  text: 'Kochgeschirr, Besteck, Becher',           prio: 'high',   hinweis: 'Topf + Pfanne + Teller + Besteck für 2 Personen — leicht & stapelbar' },
+  { id: 10, text: 'Proviant für 7 Tage einkaufen',           prio: 'high',   hinweis: 'Kurz vor Abfahrt kaufen: Haferflocken, Nudeln, Reis, Linsen, Nüsse, Riegel, gefriergetrocknet' },
+  { id: 11, text: 'Trinkwasser-Aufbereitung',                prio: 'medium', hinweis: 'Klarälven-Wasser trinkbar, aber Filter (z.B. Sawyer Squeeze) oder Tabs als Backup empfohlen' },
+
+  // Feuer
+  { id: 12, text: 'Feuerzeug & Backup-Zünder',               prio: 'high',   hinweis: 'Mindestens 2 Feuerzeuge + wasserfeste Streichhölzer — immer separat verstauen' },
+  { id: 13, text: 'Feuerstarter / Anzünder mitnehmen',       prio: 'medium', hinweis: 'Wachsblöcke oder Feuerstahlpaste — Holz am Fluss oft feucht' },
+  { id: 14, text: 'Kleine Axt oder Säge einpacken',          prio: 'medium', hinweis: 'Zum Holzkleinmachen — Hultafors-Hatchet oder Bahco-Säge' },
+
+  // Sicherheit & Komfort
+  { id: 15, text: 'Mückenschutz einpacken',                  prio: 'high',   hinweis: 'Schweden Juli = Mückenhölle — DEET-Spray + Buff/Mückennetz für Kopf' },
+  { id: 16, text: 'Erste-Hilfe-Set zusammenstellen',         prio: 'medium', hinweis: 'Blasenpflaster, Wundversorgung, Ibuprofen, Antihistaminika, persönliche Medikamente' },
+  { id: 17, text: 'Wasserdichte Packsäcke (Dry Bags)',       prio: 'medium', hinweis: 'Alles im Kanu muss wasserdicht — prüfen ob Vildmark welche stellt, sonst selbst mitbringen' },
+  { id: 18, text: 'Sonnenschutz & Sonnenbrille',             prio: 'medium', hinweis: 'Auf dem Wasser viel direktes + reflektiertes Licht' },
 ];

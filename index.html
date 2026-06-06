@@ -105,13 +105,17 @@ const grid = document.getElementById('tours-grid');
 
 TOUREN.forEach(t => {
   const portagen = t.portagen === null ? '?' : t.portagen === 0 ? 'Keine' : t.portagen;
-  const badge = t.verfuegbar === 'confirmed'
+  const badge = t.verfuegbar === 'booked'
+    ? `<span class="badge-booked">${t.verfuegbarText}</span>`
+    : t.verfuegbar === 'confirmed'
     ? `<span class="badge-confirmed">${t.verfuegbarText}</span>`
     : `<span class="badge-inquiry">${t.verfuegbarText}</span>`;
 
   const tags = t.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
 
-  const buchBtn = t.buchungUrl
+  const buchBtn = t.verfuegbar === 'booked'
+    ? `<span class="btn-booked">Buchung #${t.buchungRef}</span>`
+    : t.buchungUrl
     ? `<a class="btn-primary" href="${t.buchungUrl}" target="_blank" rel="noopener">Buchen →</a>`
     : `<span class="btn-disabled">Online nicht buchbar</span>`;
 

@@ -436,6 +436,23 @@ section {
   align-self: flex-start;
 }
 
+.badge-booked {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 100px;
+  padding: 0.25rem 0.7rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
+  letter-spacing: 0.04em;
+}
+
 .card-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -591,6 +608,22 @@ section {
   border: 1px solid var(--border);
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.btn-booked {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.25rem;
+  background: var(--green-dim);
+  color: var(--green);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--green-mid);
 }
 
 /* ── MAP ─────────────────────────────────────────── */
